@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include <pigpiod_if2.h>
 
@@ -36,11 +37,15 @@ void RunOnConsole(const int pi, const int handle) {
     } else {
       try {
 	std::stringstream l(inputLine);
+	std::vector<unsigned int> rows(maxRow);
+	std::vector<unsigned int> remap { 0, 4, 2, 6, 1, 5, 3, 7};
+	
 	for(unsigned int i=0; i<maxRow; ++i ) {
-	  unsigned int nxtValue;
-	  l >> nxtValue;
+	  l >> rows.at(remap.at(i));
+	}
 
-	  SetRow(pi, handle, i, nxtValue);
+	for(unsigned int i=0; i<maxRow; ++i ) {
+	  SetRow(pi, handle, i, rows.at(i));
 	}
       }
       catch( std::exception& e ) {
@@ -67,7 +72,7 @@ int main() {
 
   try {
     const unsigned int spiChannel = 0;
-    const unsigned int baud = 32768;
+    const unsigned int baud = 1 << 20;
     unsigned int flags = 0;
 
     const unsigned int mode = 0;
