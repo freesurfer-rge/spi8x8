@@ -14,7 +14,8 @@ string(
 
 add_compile_options("${_warning_opts}")
 
-
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
+find_package(pigpio)
 
 set(srcs)
 
