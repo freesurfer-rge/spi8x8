@@ -4,6 +4,14 @@
 
 #include <pigpiod_if2.h>
 
+/*
+  Very simple driver for the LED 8x8 Display
+
+  WCLK goes to GPIO18 (Select)
+  DCLK goes to GPIO21 (SCLK)
+  DATA goes to GPIO20 (COPI)
+ */
+
 const unsigned int maxRow = 8;
 
 void SetRow(const int pi, const int handle,
@@ -38,6 +46,9 @@ void RunOnConsole(const int pi, const int handle) {
       try {
 	std::stringstream l(inputLine);
 	std::vector<unsigned int> rows(maxRow);
+
+	// The remap handles the switching of the
+	// '1' and '4' address lines on the PCB
 	std::vector<unsigned int> remap { 0, 4, 2, 6, 1, 5, 3, 7};
 	
 	for(unsigned int i=0; i<maxRow; ++i ) {
@@ -76,10 +87,16 @@ int main() {
     unsigned int flags = 0;
 
     const unsigned int mode = 0;
+    
+    // Unlike normal SPI, board is selected by
+    // a high select line
     const unsigned int ce0ActiveHigh = 1 << 2;
     const unsigned int auxSPI = 1 << 8;
 
+    // Need to send least significant bit first
     const unsigned int copiLSBfirst = 1 << 14;
+
+    // We have two shift registers in series
     const unsigned int wordSize = 16 << 16;
 
     flags = mode | ce0ActiveHigh | auxSPI | copiLSBfirst | wordSize;
