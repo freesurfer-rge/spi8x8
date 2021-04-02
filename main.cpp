@@ -9,8 +9,8 @@ void SetRow(const int pi, const int handle,
 	    const unsigned int row, const unsigned int value) {
   char buffer[2];
 
-  buffer[0] = row;
-  buffer[1] = value;
+  buffer[1] = row>8 ? 0 : 255;
+  buffer[0] = value;
 
   const int result = spi_write(pi, handle, buffer, 2);
   if( result != 2 ) {
@@ -85,7 +85,7 @@ int main() {
       throw std::runtime_error(msg.str());
     }
 
-    RunOnConsole(pi, handle)
+    RunOnConsole(piId, handle);
 
     spi_close(piId, handle);
   }
