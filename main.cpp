@@ -9,7 +9,7 @@ void SetRow(const int pi, const int handle,
 	    const unsigned int row, const unsigned int value) {
   char buffer[2];
 
-  buffer[1] = row>8 ? 0 : 255;
+  buffer[1] = row;
   buffer[0] = value;
 
   const int result = spi_write(pi, handle, buffer, 2);
@@ -36,12 +36,12 @@ void RunOnConsole(const int pi, const int handle) {
     } else {
       try {
 	std::stringstream l(inputLine);
-	for( unsigned int i=0; i<maxRow; i++ ) {
-	  unsigned int nxtValue;
-	  l >> nxtValue;
-	  
-	  SetRow(pi, handle, i, nxtValue);
-	}
+
+	unsigned int row, value;
+	l >> row >> value;
+
+	std::cout << "Setting " << row << " " << value << std::endl;
+	SetRow(pi, handle, row, value);
       }
       catch( std::exception& e ) {
         std::cerr << e.what() << std::endl;
@@ -70,12 +70,14 @@ int main() {
     const unsigned int baud = 32768;
     unsigned int flags = 0;
 
+    const unsigned int mode = 0;
     const unsigned int ce0ActiveHigh = 1 << 2;
     const unsigned int auxSPI = 1 << 8;
 
     const unsigned int copiLSBfirst = 1 << 14;
+    const unsigned int wordSize = 16 << 16;
 
-    flags = ce0ActiveHigh | auxSPI | copiLSBfirst;
+    flags = mode | ce0ActiveHigh | auxSPI | copiLSBfirst | wordSize;
 
     const int handle = spi_open(piId, spiChannel, baud, flags);
     if( handle < 0 ) {
