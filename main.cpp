@@ -36,12 +36,12 @@ void RunOnConsole(const int pi, const int handle) {
     } else {
       try {
 	std::stringstream l(inputLine);
+	for(unsigned int i=0; i<maxRow; ++i ) {
+	  unsigned int nxtValue;
+	  l >> nxtValue;
 
-	unsigned int row, value;
-	l >> row >> value;
-
-	std::cout << "Setting " << row << " " << value << std::endl;
-	SetRow(pi, handle, row, value);
+	  SetRow(pi, handle, i, nxtValue);
+	}
       }
       catch( std::exception& e ) {
         std::cerr << e.what() << std::endl;
