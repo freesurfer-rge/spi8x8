@@ -72,7 +72,7 @@ int main() {
 
   try {
     const unsigned int spiChannel = 0;
-    const unsigned int baud = 1 << 20;
+    const unsigned int baud = 1 << 22;
     unsigned int flags = 0;
 
     const unsigned int mode = 0;
